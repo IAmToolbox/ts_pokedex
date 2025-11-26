@@ -3,7 +3,7 @@
 import type { State } from "./state.js";
 import { exit } from "node:process";
 
-export function commandExit(state: State): void {
+export async function commandExit(state: State): Promise<void> {
     console.log("Closing the Pokedex... Goodbye!");
     state.rl.close();
     exit(0);
