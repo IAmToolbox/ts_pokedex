@@ -1,6 +1,6 @@
 //Imports go here
 
-import type { State } from "./state.ts";
+import type { State } from "./state.js";
 
 // Exported functions go here
 
