@@ -14,12 +14,16 @@ export class Cache {
         this.#interval = interval;
     }
 
-    add<T>(key: string, val: T) {
-        this.#cache.set(key, val);
+    add<T>(key: string | undefined, val: T) {
+        if (key !== undefined) {
+            this.#cache.set(key, {createdAt: Date.now(), val: val});
+        }
     }
 
-    get<T>(key: string) {
-        return this.#cache.get(key);
+    get<T>(key: string | undefined) {
+        if (key !== undefined) {
+            return this.#cache.get(key);
+        }
     }
 
     #reap() {

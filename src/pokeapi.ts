@@ -11,11 +11,13 @@ export class PokeAPI {
     async fetchLocations(pageURL?: string): Promise<ShallowLocations> {
         if (this.cache.get(pageURL)) {
             const cachedObject = this.cache.get(pageURL)
-            return {
-                next: cachedObject.next,
-                previous: cachedObject.previous,
-                results: cachedObject.results
-            };
+            if (cachedObject !== undefined) {
+                return {
+                    next: cachedObject.val.next,
+                    previous: cachedObject.val.previous,
+                    results: cachedObject.val.results
+                };
+            }
         }
         try {
             const response = await fetch(`${pageURL ? pageURL : PokeAPI.baseURL + "/location-area/"}`);
