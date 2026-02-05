@@ -37,7 +37,30 @@ export class PokeAPI {
     }
 
     async fetchLocation(locationName: string): Promise<Location> {
-        throw new Error("This isn't implemented yet!");
+        const url = PokeAPI.baseURL + "/location-area/" + locationName;
+        if (this.cache.get(url)) {
+            const cachedObject = this.cache.get(url);
+            if (cachedObject !== undefined) {
+                return {
+                    pokemonEncounters: cachedObject.val.pokemon_encounters
+                };
+            }
+        }
+
+        try {
+
+            const response = await fetch(url);
+            const responseObject = await response.json();
+            this.cache.add(url, responseObject);
+            return {
+                pokemonEncounters: responseObject.pokemon_encounters
+            };
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(error);
+            }
+            throw new Error("Network request failed");
+        }
     }
 }
 
@@ -50,8 +73,13 @@ export type ShallowLocations = {
 type Result = {
     name: string,
     url: string,
-}
+};
 
 export type Location = {
-    // TODO: Properly implement this
+    pokemonEncounters: PokemonEncounter[],
 };
+
+type PokemonEncounter = {
+    pokemon: Result,
+    versionDetails: any, // I have no idea if I'm even gonna use this information tbh
+}

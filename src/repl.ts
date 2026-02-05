@@ -30,8 +30,13 @@ export async function startREPL(state: State): Promise<void> {
         //Check if the command is valid
         if (cleanedInput[0] in commands) {
             const command = cleanedInput[0];
+            const args: string[] = [];
+            if (cleanedInput.length > 1) {
+                const inputSlice = cleanedInput.slice(1);
+                args.push(...inputSlice);
+            }
             try {
-                await commands[command].callback(state); // I hate indexing with objects!! I never know if it's a dot or square brackets raaaahhhhh!!
+                await commands[command].callback(state, ...args); // I hate indexing with objects!! I never know if it's a dot or square brackets raaaahhhhh!!
             } catch (error) {
                 console.error("Error running command:", error);
             }
