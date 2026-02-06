@@ -48,12 +48,47 @@ export class PokeAPI {
         }
 
         try {
-
             const response = await fetch(url);
             const responseObject = await response.json();
             this.cache.add(url, responseObject);
             return {
                 pokemonEncounters: responseObject.pokemon_encounters
+            };
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(error);
+            }
+            throw new Error("Network request failed");
+        }
+    }
+
+    async fetchPokemon(pokemonName: string): Promise<Pokemon> {
+        const url = PokeAPI.baseURL + "/pokemon/" + pokemonName;
+        if (this.cache.get(url)) {
+            const cachedObject = this.cache.get(url);
+            if (cachedObject !== undefined) {
+                return {
+                    name: cachedObject.val.name,
+                    baseExperience: cachedObject.val.base_experience,
+                    height: cachedObject.val.height,
+                    weight: cachedObject.val.weight,
+                    stats: cachedObject.val.stats,
+                    types: cachedObject.val.types,
+                };
+            }
+        }
+
+        try {
+            const response = await fetch(url);
+            const responseObject = await response.json();
+            this.cache.add(url, responseObject);
+            return {
+                name: responseObject.name,
+                baseExperience: responseObject.base_experience,
+                height: responseObject.height,
+                weight: responseObject.weight,
+                stats: responseObject.stats,
+                types: responseObject.types,
             };
         } catch (error) {
             if (error instanceof Error) {
@@ -82,4 +117,24 @@ export type Location = {
 type PokemonEncounter = {
     pokemon: Result,
     versionDetails: any, // I have no idea if I'm even gonna use this information tbh
+};
+
+export type Pokemon = {
+    name: string,
+    baseExperience: number,
+    height: number,
+    weight: number,
+    stats: PokemonStat[],
+    types: PokemonType[],
+};
+
+type PokemonStat = {
+    baseStat: number,
+    effortValue: number,
+    stat: Result,
+};
+
+type PokemonType = {
+    slot: number,
+    type: Result,
 }

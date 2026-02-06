@@ -9,8 +9,10 @@ import { commandHelp } from "./command_help.js";
 import { commandMap } from "./command_map.js";
 import { commandMapB } from "./command_mapb.js";
 import { commandExplore } from "./command_explore.js";
+import { commandCatch } from "./command_catch.js";
 
 import { PokeAPI } from "./pokeapi.js";
+import type { Pokemon } from "./pokeapi.js";
 
 // This used to be declared in its own file, but now it's here
 export type CLICommand = {
@@ -22,6 +24,7 @@ export type CLICommand = {
 // The State type, which is a state machine
 export type State = {
     api: PokeAPI,
+    pokedex: Record<string, Pokemon>,
     mapData: MapData,
     rl: Interface,
     commands: Record<string, CLICommand>,
@@ -36,6 +39,7 @@ type MapData = {
 export function initState(): State {
     return {
         api: new PokeAPI,
+        pokedex: {},
         mapData: {
             next: null,
             previous: null,
@@ -65,6 +69,11 @@ export function initState(): State {
                 name: "explore",
                 description: "(Takes 1 argument) Explores a specified area, showing more information about it",
                 callback: commandExplore,
+            },
+            catch: {
+                name: "catch",
+                description: "(Takes 1 argument) Attempts to catch a specified Pokemon. Success registers the Pokemon to your personal Pokedex.",
+                callback: commandCatch,
             },
             exit: {
                 name: "exit",
