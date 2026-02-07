@@ -13,7 +13,7 @@ export async function commandCatch(state: State, pokemonName: string): Promise<v
     if (pokemonData.baseExperience <= catchValue) {
         state.pokedex[pokemonName] = pokemonData;
         console.log(`${pokemonName} was caught!`);
-        console.log("You may use the inspect command to ")
+        console.log("You may use the inspect command to learn more about it");
         return;
     } else {
         console.log(`${pokemonName} escaped!`);

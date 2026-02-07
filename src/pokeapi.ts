@@ -129,8 +129,8 @@ export type Pokemon = {
 };
 
 type PokemonStat = {
-    baseStat: number,
-    effortValue: number,
+    base_stat: number,
+    effort_value: number,
     stat: Result,
 };
 
